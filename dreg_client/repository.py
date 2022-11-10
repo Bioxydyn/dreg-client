@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Optional, Sequence, Union, Mapping, Any
 
 from ._synth import synth_manifest_list_from_manifest
 from .client import Client
 from .image import Image
-from .manifest import LegacyManifest, ManifestList, ManifestParseOutput
+from .manifest import LegacyManifest, ManifestList, ManifestParseOutput, ImageConfig
 
 
 if TYPE_CHECKING:
@@ -65,6 +65,11 @@ class Repository:
         Return a manifest for a given reference (a tag or a digest)
         """
         return self._client.get_manifest(self.name, reference)
+
+    def get_config(self, reference: str) -> ImageConfig:
+        manifest = self.get_manifest(reference)
+        digest = manifest.config.digest
+        return self._client.get_image_config_blob(self.name, digest)
 
     def delete_manifest(self, digest: str, /) -> Response:
         return self._client.delete_manifest(self.name, digest)

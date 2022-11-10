@@ -147,7 +147,7 @@ class Client:
 
     def get_image_config_blob(self, name: str, digest: str) -> ImageConfig:
         response = self.get_blob(name, digest)
-        return parse_image_config_blob_response(response)
+        return parse_image_config_blob_response(response, suppress_no_digest=True)
 
     def get_blob(self, name: str, digest: str) -> Response:
         response = self._get(f"{name}/blobs/{digest}", scope_repo(name))

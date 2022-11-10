@@ -158,9 +158,9 @@ class UnusableImageConfigBlobPayloadError(Exception):
         self.payload = payload
 
 
-def parse_image_config_blob_response(response: Response) -> ImageConfig:
+def parse_image_config_blob_response(response: Response, suppress_no_digest: bool = False) -> ImageConfig:
     digest = response.headers.get("Docker-Content-Digest")
-    if not digest:
+    if not digest and not suppress_no_digest:
         raise UnusableImageConfigBlobResponseError(
             response, "No digest specified in response headers."
         )
